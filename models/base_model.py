@@ -7,7 +7,8 @@ from datetime import datetime
 
 class BaseModel:
     """
-    The BaseModel class for handling common attributes/methods for other classes.
+    The BaseModel class for handling common
+    attributes/methods for other classes.
     """
 
     def __init__(self, *args, **kwargs):
@@ -17,7 +18,11 @@ class BaseModel:
                 if key == '__class__':
                     continue
                 elif key == 'created_at' or key == 'updated_at':
-                    setattr(self, key, datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f"))
+                    setattr(
+                    self,
+                    key,
+                    datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                    )
                 else:
                     setattr(self, key, value)
         else:
@@ -26,7 +31,8 @@ class BaseModel:
             self.updated_at = datetime.now()
 
     def save(self):
-        """Update the public instance attribute updated_at with the current datetime."""
+        """Update the public instance attribute updated_at
+        with the current datetime."""
         self.updated_at = datetime.now()
 
     def to_dict(self):
@@ -39,4 +45,8 @@ class BaseModel:
 
     def __str__(self):
         """Return the string representation of the instance."""
-        return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.to_dict())
+        return "[{}] ({}) {}".format(
+        self.__class__.__name__,
+        self.id,
+        self.to_dict()
+        )
