@@ -5,6 +5,7 @@ Module for the BaseModel class.
 import uuid
 from datetime import datetime
 
+
 class BaseModel:
     """
     The BaseModel class for handling common
@@ -19,9 +20,9 @@ class BaseModel:
                     continue
                 elif key == 'created_at' or key == 'updated_at':
                     setattr(
-                    self,
-                    key,
-                    datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                        self,
+                        key,
+                        datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
                     )
                 else:
                     setattr(self, key, value)
@@ -46,7 +47,7 @@ class BaseModel:
     def __str__(self):
         """Return the string representation of the instance."""
         return "[{}] ({}) {}".format(
-        self.__class__.__name__,
-        self.id,
-        self.to_dict()
+            self.__class__.__name__,
+            self.id,
+            self.to_dict()
         )
