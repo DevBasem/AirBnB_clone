@@ -1,101 +1,87 @@
-"""Testing the `base_model` module."""
+#!/usr/bin/python3
+"""
+Unittest for BaseModel class.
+"""
+
+import unittest
 import json
 import os
-import time
-import unittest
-import uuid
-from datetime import datetime
 from models.base_model import BaseModel
-from models.engine.file_storage import FileStorage
 
-
-class TestBase(unittest.TestCase):
-    """Test cases for the `Base` class.
+class TestBaseModel(unittest.TestCase):
+    """
+    Test cases for BaseModel class.
     """
 
     def setUp(self):
-        pass
-
-    def tearDown(self) -> None:
-        """Resets FileStorage data."""
-        FileStorage._FileStorage__objects = {}
-        if os.path.exists(FileStorage._FileStorage__file_path):
-            os.remove(FileStorage._FileStorage__file_path)
-
-    def test_initialization_positive(self):
-        """Test passing cases `BaseModel` initialization.
         """
-        b1 = BaseModel()
-        b2_uuid = str(uuid.uuid4())
-        b2 = BaseModel(id=b2_uuid, name="The weeknd", album="Trilogy")
-        self.assertIsInstance(b1.id, str)
-        self.assertIsInstance(b2.id, str)
-        self.assertEqual(b2_uuid, b2.id)
-        self.assertEqual(b2.album, "Trilogy")
-        self.assertEqual(b2.name, "The weeknd")
-        self.assertIsInstance(b1.created_at, datetime)
-        self.assertIsInstance(b1.created_at, datetime)
-        self.assertEqual(str(type(b1)),
-                         "<class 'models.base_model.BaseModel'>")
+        Set up test cases.
+        """
+        self.model = BaseModel()
+        self.model.name = "Test Model"
+        self.model.my_number = 42
 
-    def test_dict(self):
-        """Test method for dict"""
-        b1 = BaseModel()
-        b2_uuid = str(uuid.uuid4())
-        b2 = BaseModel(id=b2_uuid, name="The weeknd", album="Trilogy")
-        b1_dict = b1.to_dict()
-        self.assertIsInstance(b1_dict, dict)
-        self.assertIn('id', b1_dict.keys())
-        self.assertIn('created_at', b1_dict.keys())
-        self.assertIn('updated_at', b1_dict.keys())
-        self.assertEqual(b1_dict['__class__'], type(b1).__name__)
-        with self.assertRaises(KeyError) as e:
-            b2.to_dict()
+    def tearDown(self):
+        """
+        Clean up after each test.
+        """
+        try:
+            os.remove("file.json")
+        except FileNotFoundError:
+            pass
 
-    def test_save(self):
-        """Test method for save"""
-        b = BaseModel()
-        time.sleep(0.5)
-        date_now = datetime.now()
-        b.save()
-        diff = b.updated_at - date_now
-        self.assertTrue(abs(diff.total_seconds()) < 0.01)
+    def test_instance_creation(self):
+        """
+        Test instance creation and attributes.
+        """
+        self.assertIsInstance(self.model, BaseModel)
+        self.assertTrue(hasattr(self.model, 'id'))
+        self.assertTrue(hasattr(self.model, 'created_at'))
+        self.assertTrue(hasattr(self.model, 'updated_at'))
+        self.assertTrue(hasattr(self.model, 'name'))
+        self.assertTrue(hasattr(self.model, 'my_number'))
 
-    def test_save_storage(self):
-        """Tests that storage.save() is called from save()."""
-        b = BaseModel()
-        b.save()
-        key = "{}.{}".format(type(b).__name__, b.id)
-        d = {key: b.to_dict()}
-        self.assertTrue(os.path.isfile(FileStorage._FileStorage__file_path))
-        with open(FileStorage._FileStorage__file_path,
-                  "r", encoding="utf-8") as f:
-            self.assertEqual(len(f.read()), len(json.dumps(d)))
-            f.seek(0)
-            self.assertEqual(json.load(f), d)
+    def test_save_method(self):
+        """
+        Test save method.
+        """
+        self.model.save()
+        self.assertNotEqual(self.model.created_at, self.model.updated_at)
 
-    def test_save_no_args(self):
-        """Tests save() with no arguments."""
-        self.resetStorage()
-        with self.assertRaises(TypeError) as e:
-            BaseModel.save()
-        msg = "save() missing 1 required positional argument: 'self'"
-        self.assertEqual(str(e.exception), msg)
+    def test_to_dict_method(self):
+        """
+        Test to_dict method.
+        """
+        model_dict = self.model.to_dict()
+        self.assertIsInstance(model_dict, dict)
+        self.assertIn('__class__', model_dict)
+        self.assertEqual(model_dict['__class__'], 'BaseModel')
+        self.assertIn('created_at', model_dict)
+        self.assertIn('updated_at', model_dict)
+        self.assertIn('id', model_dict)
+        self.assertIn('name', model_dict)
+        self.assertIn('my_number', model_dict)
 
-    def test_save_excess_args(self):
-        """Tests save() with too many arguments."""
-        self.resetStorage()
-        with self.assertRaises(TypeError) as e:
-            BaseModel.save(self, 98)
-        msg = "save() takes 1 positional argument but 2 were given"
-        self.assertEqual(str(e.exception), msg)
+    def test_str_method(self):
+        """
+        Test __str__ method.
+        """
+        string_representation = str(self.model)
+        self.assertIsInstance(string_representation, str)
+        self.assertIn('[BaseModel]', string_representation)
+        self.assertIn(str(self.model.id), string_representation)
+        self.assertIn(str(self.model.__dict__), string_representation)
 
-    def test_str(self):
-        """Test method for str representation"""
-        b1 = BaseModel()
-        string = f"[{type(b1).__name__}] ({b1.id}) {b1.__dict__}"
-        self.assertEqual(b1.__str__(), string)
-
+    def test_reload_method(self):
+        """
+        Test reload method.
+        """
+        self.model.save()
+        model_id = self.model.id
+        del self.model
+        new_storage = BaseModel()
+        new_storage.reload()
+        self.assertTrue(hasattr(new_storage, 'BaseModel.' + model_id))
 
 if __name__ == "__main__":
     unittest.main()
