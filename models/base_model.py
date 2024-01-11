@@ -2,9 +2,9 @@
 """
 Module containing the BaseModel class
 """
-import models
 from datetime import datetime
 import uuid
+import models
 
 
 class BaseModel:
@@ -23,7 +23,8 @@ class BaseModel:
         if kwargs:
             for key, value in kwargs.items():
                 if key == 'created_at' or key == 'updated_at':
-                    value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                    if isinstance(value, str):
+                        value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
                 if key != '__class__':
                     setattr(self, key, value)
             if 'id' not in kwargs:
