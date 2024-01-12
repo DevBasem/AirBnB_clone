@@ -4,12 +4,26 @@ This module contains the HBNBCommand class, which serves as the command
 interpreter for the AirBnB console.
 """
 
+import sys
 import cmd
 from models import storage
 from models.base_model import BaseModel
 from models.user import User
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
 
-current_classes = {"BaseModel": BaseModel, "User": User}
+current_classes = {
+    "BaseModel": BaseModel,
+    "User": User,
+    "Place": Place,
+    "State": State,
+    "City": City,
+    "Amenity": Amenity,
+    "Review": Review,
+}
 
 
 class HBNBCommand(cmd.Cmd):
@@ -157,4 +171,8 @@ class HBNBCommand(cmd.Cmd):
                 storage.save()
 
 if __name__ == '__main__':
-    HBNBCommand().cmdloop()
+    if not sys.stdin.isatty():
+        for line in sys.stdin:
+            HBNBCommand().onecmd(line.strip())
+    else:
+        HBNBCommand().cmdloop()
