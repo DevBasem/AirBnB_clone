@@ -8,6 +8,7 @@ from models import storage
 from datetime import datetime
 import json
 
+
 class TestBaseModel(unittest.TestCase):
     """ define unittests for base model """
 
@@ -68,6 +69,7 @@ class TestBaseModel(unittest.TestCase):
         model_dict = self.model.to_dict()
         updated_at = model_dict['updated_at']
         self.assertEqual(updated_at, self.model.updated_at.isoformat())
+
 
 if __name__ == "__main__":
     unittest.main()
