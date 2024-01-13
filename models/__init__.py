@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-__init__.py: Package initializer
+Module: Package initializer
 
 Description:
     - Initializes the package with a FileStorage instance
