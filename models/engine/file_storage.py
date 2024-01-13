@@ -68,16 +68,17 @@ class FileStorage:
         """
         try:
             with open(self.__file_path, 'r') as file:
-                loaded_objects = json.load(file)
-                for key, value in loaded_objects.items():
-                    class_name, obj_id = key.split('.')
-                    value['created_at'] = datetime.strptime(
-                        value['created_at'], "%Y-%m-%dT%H:%M:%S.%f"
-                    )
-                    value['updated_at'] = datetime.strptime(
-                        value['updated_at'], "%Y-%m-%dT%H:%M:%S.%f"
-                    )
-                    obj_instance = eval(class_name)(**value)
-                    self.__objects[key] = obj_instance
+                if os.path.getsize(self.__file_path) > 0:
+                    loaded_objects = json.load(file)
+                    for key, value in loaded_objects.items():
+                        class_name, obj_id = key.split('.')
+                        value['created_at'] = datetime.strptime(
+                            value['created_at'], "%Y-%m-%dT%H:%M:%S.%f"
+                        )
+                        value['updated_at'] = datetime.strptime(
+                            value['updated_at'], "%Y-%m-%dT%H:%M:%S.%f"
+                        )
+                        obj_instance = eval(class_name)(**value)
+                        self.__objects[key] = obj_instance
         except FileNotFoundError:
             pass

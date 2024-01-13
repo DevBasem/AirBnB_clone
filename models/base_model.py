@@ -24,9 +24,14 @@ class BaseModel:
             for key, value in kwargs.items():
                 if key == 'created_at' or key == 'updated_at':
                     if isinstance(value, str):
-                        value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+                        value = datetime.strptime(
+                            value, "%Y-%m-%dT%H:%M:%S.%f"
+                        )
                 if key != '__class__':
                     setattr(self, key, value)
+                    if (value is None
+                            and key in ['id', 'created_at', 'updated_at']):
+                        raise TypeError(f"{key} cannot be None")
             if 'id' not in kwargs:
                 self.id = str(uuid.uuid4())
             if 'created_at' not in kwargs:

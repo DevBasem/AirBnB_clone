@@ -72,7 +72,8 @@ class HBNBCommand(cmd.Cmd):
             print(new_instance.id)
 
     def do_show(self, arg):
-        """Prints the string representation of an instance based on the class name and id."""
+        """Prints the string representation of an instance
+        based on the class name and id."""
         args = arg.split()
         if not args:
             print("** class name missing **")
@@ -140,7 +141,10 @@ class HBNBCommand(cmd.Cmd):
         """
         args = arg.split()
         if not args or args[0] not in current_classes:
-            print("** class name missing **" if not args else "** class doesn't exist **")
+            print(
+                "** class name missing **" if not args
+                else "** class doesn't exist **"
+            )
             return
 
         if len(args) < 2:
@@ -159,7 +163,8 @@ class HBNBCommand(cmd.Cmd):
         else:
             instance = instance_objs[obj_key]
             attribute_name = args[2]
-            attribute_value = args[3].strip('"')
+            # attribute_value = args[3].strip('"')
+            attribute_value = ' '.join(args[3:]).strip('"')
 
             if hasattr(instance, attribute_name):
                 attr_type = type(getattr(instance, attribute_name))
@@ -169,6 +174,7 @@ class HBNBCommand(cmd.Cmd):
                 # Add the attribute if it doesn't exist
                 setattr(instance, attribute_name, attribute_value)
                 storage.save()
+
 
 if __name__ == '__main__':
     if not sys.stdin.isatty():
