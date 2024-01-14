@@ -7,6 +7,7 @@ Unittest classes:
 import os
 import models
 import unittest
+from unittest import TestCase
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
 from models.user import User
@@ -172,7 +173,8 @@ class TestFileStorage_methods(unittest.TestCase):
         with self.assertRaises(TypeError):
             models.storage.reload(None)
     def test_reload_missing_file(self):
-        self.assertRaises(FileNotFoundError, models.storage.reload())
+        with self.assertRaises(FileNotFoundError):
+            models.storage.reload()
 
 
 if __name__ == "__main__":

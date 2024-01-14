@@ -81,4 +81,4 @@ class FileStorage:
                         obj_instance = eval(class_name)(**value)
                         self.__objects[key] = obj_instance
         except FileNotFoundError:
-            pass
+            raise
