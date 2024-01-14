@@ -79,7 +79,7 @@ class FileStorage:
                         value['updated_at'] = datetime.strptime(
                             value['updated_at'], "%Y-%m-%dT%H:%M:%S.%f"
                         )
-                    
+
                         obj_class = classes.get(class_name)
                         if obj_class:
                             obj_instance = obj_class(**value)
