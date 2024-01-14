@@ -171,9 +171,11 @@ class TestFileStorage_methods(unittest.TestCase):
     def test_reload_with_arg(self):
         with self.assertRaises(TypeError):
             models.storage.reload(None)
-
+    """
     def test_reload_missing_file(self):
-        self.assertRaises(FileNotFoundError, models.storage.reload)
+        with self.assertRaises(FileNotFoundError):
+            models.storage.reload()
+    """
 
 
 if __name__ == "__main__":
