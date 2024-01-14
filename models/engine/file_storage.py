@@ -79,7 +79,10 @@ class FileStorage:
                         value['updated_at'] = datetime.strptime(
                             value['updated_at'], "%Y-%m-%dT%H:%M:%S.%f"
                         )
-                        obj_instance = eval(class_name)(**value)
-                        self.__objects[key] = obj_instance
+                    
+                        obj_class = classes.get(class_name)
+                        if obj_class:
+                            obj_instance = obj_class(**value)
+                            self.__objects[key] = obj_instance
         except FileNotFoundError:
             pass
