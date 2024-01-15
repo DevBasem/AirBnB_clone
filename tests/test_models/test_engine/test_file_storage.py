@@ -8,6 +8,7 @@ Unittest classes:
 import unittest
 import os
 import models
+import json
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
 from models.user import User
@@ -183,6 +184,47 @@ class TestFileStorageMethods(unittest.TestCase):
         """Test reload method with an argument."""
         with self.assertRaises(TypeError):
             models.storage.reload(None)
+
+    def test_reload_nonexistent_file(self):
+        """Test reload method when the file does not exist."""
+        a_storage = FileStorage()
+        try:
+            os.remove("file.json")
+        except FileNotFoundError:
+            pass
+        self.assertIsNone(a_storage.reload())
+
+    def test_reload_empty_file(self):
+        """Test reload method when the file is empty."""
+        a_storage = FileStorage()
+        with open("file.json", "w") as f:
+            f.write("")
+        self.assertIsNone(a_storage.reload())
+
+    def test_reload_corrupted_file(self):
+        """Test reload method when the file contains corrupted data."""
+        with open("file.json", "w") as f:
+            f.write("invalid_json_data")
+        a_storage = FileStorage()
+        with self.assertRaises(Exception) as context:
+            a_storage.reload()
+        self.assertIsInstance(context.exception, json.JSONDecodeError)
+
+    def test_reload_missing_attributes(self):
+        """Test reload method when loaded objects have missing attributes."""
+        a_storage = FileStorage()
+        with open("file.json", "w") as f:
+            f.write('{"BaseModel.123": {}}')
+        a_storage.reload()
+        self.assertNotIn("BaseModel.123", a_storage.all())
+
+    def test_reload_invalid_datetime_format(self):
+        """Test reload method when loaded objects have an invalid datetime format."""
+        a_storage = FileStorage()
+        with open("file.json", "w") as f:
+             f.write('{"BaseModel.123": {"created_at": "2022-01-01T12:00:00.000000"}}')
+        a_storage.reload()
+        self.assertNotIn("BaseModel.123", a_storage.all())
 
 
 if __name__ == "__main__":

@@ -73,16 +73,17 @@ class FileStorage:
 
                     for key, value in loaded_objects.items():
                         class_name, obj_id = key.split('.')
-                        value['created_at'] = datetime.strptime(
-                            value['created_at'], "%Y-%m-%dT%H:%M:%S.%f"
-                        )
-                        value['updated_at'] = datetime.strptime(
-                            value['updated_at'], "%Y-%m-%dT%H:%M:%S.%f"
-                        )
+                        if 'created_at' in value and 'updated_at' in value:
+                            value['created_at'] = datetime.strptime(
+                                value['created_at'], "%Y-%m-%dT%H:%M:%S.%f"
+                            )
+                            value['updated_at'] = datetime.strptime(
+                                value['updated_at'], "%Y-%m-%dT%H:%M:%S.%f"
+                            )
 
-                        obj_class = classes.get(class_name)
-                        if obj_class:
-                            obj_instance = obj_class(**value)
-                            self.__objects[key] = obj_instance
+                            obj_class = classes.get(class_name)
+                            if obj_class:
+                                obj_instance = obj_class(**value)
+                                self.__objects[key] = obj_instance
         except FileNotFoundError:
             pass
