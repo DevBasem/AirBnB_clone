@@ -2,12 +2,7 @@
   box-sizing: border-box;
 }
 
-.container {
-  max-width: 1000px;
-  width: 100%;
-  margin: 30px auto;
-}
-
+h2,
 h3,
 h4 {
   margin: 0;
@@ -23,15 +18,10 @@ h4 {
   font-weight: 400;
 }
 
-.locations,
-.amenities {
-  height: 100%;
-  width: 25%;
-  padding: 16px;
-}
-
-.filter-content:first-child {
-  border-right: 1px solid #dddddd;
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 Button {
@@ -50,4 +40,25 @@ Button {
 
 button:hover {
   opacity: 90%;
+}
+
+.container {
+  max-width: 1000px;
+  width: 100%;
+  margin: 30px auto;
+}
+
+.locations,
+.amenities {
+  height: 100%;
+  width: 25%;
+  padding: 16px 32px;
+}
+
+.filter-content {
+  position: relative;
+}
+
+.filter-content:first-child {
+  border-right: 1px solid #dddddd;
 }
