@@ -1,7 +1,36 @@
+* {
+  box-sizing: border-box;
+}
+
 .container {
   max-width: 1000px;
   width: 100%;
   margin: 30px auto;
+}
+
+h3,
+h4 {
+  margin: 0;
+  padding: 0;
+}
+
+h3 {
+  font-weight: 600;
+}
+
+h4 {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.locations {
+  height: 100%;
+  width: 25%;
+  padding: 16px;
+}
+
+.locations:first-child {
+  border-right: 1px solid #dddddd;
 }
 
 Button {
