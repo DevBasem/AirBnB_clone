@@ -23,13 +23,14 @@ h4 {
   font-weight: 400;
 }
 
-.locations {
+.locations,
+.amenities {
   height: 100%;
   width: 25%;
   padding: 16px;
 }
 
-.locations:first-child {
+.filter-content:first-child {
   border-right: 1px solid #dddddd;
 }
 
